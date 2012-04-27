@@ -1,27 +1,22 @@
 <?php
-require_once('site_config.php');
-require_once('Smarty.class.php');
 
+require_once('Smarty.class.php');
 
 class Template {
   var $smarty = NULL;
   var $filename = '';
-  
-  function Template($filename) {
-    global $hostname, $ossse_home;
-    $smarty = new Smarty;
+  var $dir = '';
 
-    $prefix = $GLOBALS['prefix'];
-    $smarty->template_dir = $prefix . '/templates';
-    $smarty->compile_dir = '/tmp';
-    $smarty->config_dir = $prefix . '/configs';
-    $smarty->cache_dir = $prefix . '/cache';
+  function Template() {
+    $this->smarty = new Smarty;
+  }
 
-    $smarty->assign('hostname', $GLOBALS['hostname']);
-
-
+  function setTemplate($filename) {
     $this->filename = $filename;
-    $this->smarty = $smarty;
+  }
+
+  function setDir($dir) {
+    $this->dir = $dir;
   }
 
   function add_variable($var_name, $var_value) {
@@ -29,6 +24,12 @@ class Template {
   }
   
   function display() {
+    $prefix = $this->dir;
+    $smarty->template_dir = $prefix . '/templates';
+    $smarty->compile_dir = '/tmp';
+    $smarty->config_dir = $prefix . '/configs';
+    $smarty->cache_dir = $prefix . '/cache';
+    echo $prefix;
     $this->smarty->display($this->filename);
   }
 
