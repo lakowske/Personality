@@ -18,12 +18,12 @@ class UploadControllerNode extends ControllerNode
   }
 
   public function run($request) {
-    if ($_FILES['file']['error'] > 0) {
+    if ($_FILES['datafile']['error'] > 0) {
       error_log("Return Code: " . $_FILES['file']['error']);
     }
     
-    move_uploaded_file($_FILES['file']['tmp_name'], $this->uploadDir . $_FILES['file']['name']);
-    error_log("stored file: " . $this->uploadDir . $_FILES['file']['name']);
+    move_uploaded_file($_FILES['datafile']['tmp_name'], $this->uploadDir . $_FILES['datafile']['name']);
+    error_log("stored file: " . $this->uploadDir . $_FILES['datafile']['name']);
   }
 }
 
