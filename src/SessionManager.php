@@ -7,9 +7,11 @@ class SessionManager
 {
   var $d;
   var $life_time;
+  private $databaseSupplier;
 
-  function SessionManager() {
-    $this->d = new Database();
+  function SessionManager($databaseSupplier) {
+    $this->databaseSupplier = $databaseSupplier;
+    $this->d = $this->databaseSupplier->get();
     $this->life_time = get_cfg_var("session.gc_maxlifetime");
 
     session_set_save_handler(
@@ -36,11 +38,13 @@ class SessionManager
     $data = '';
 
     $time = time();
-
+    
+    error_log($session_id);
     $newid = pg_escape_string($session_id);
     $sql = "SELECT data FROM session WHERE session_id = '$newid' AND expires > $time";
     $rs = $this->d->query($sql);
-    
+    error_log($this->d->num_rows());
+
     if ($this->d->num_rows() > 0) {
       $row = $this->d->fetch_row();
       $data = $row[0];

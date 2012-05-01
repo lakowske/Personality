@@ -4,7 +4,7 @@ CREATE TABLE file (
 	fid	     		 int PRIMARY KEY DEFAULT NEXTVAL('file_serial'),
 	uid		    	 int REFERENCES puser (uid),
         gid                 	 int REFERENCES pgroup (gid),
-	url		    	 varchar(256) UNIQUE,
+	fpath		    	 varchar(256) UNIQUE,
 	filename		 varchar(256) NOT NULL,
        	create_date	    	 timestamp with time zone,
 	group_permissions	 int REFERENCES permission (permid)

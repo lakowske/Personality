@@ -9,7 +9,8 @@ class ControllerNode
   }
 
   public function evaluate($request) {
-    return preg_match($this->pattern, $request->getRequestURI()) > 0;
+    $server = $request->getServerVars();
+    return preg_match($this->pattern, $server['PATH_INFO']) > 0;
   }
 
   public function run($request) {

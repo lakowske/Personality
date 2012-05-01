@@ -1,14 +1,15 @@
 <?php
 require_once('User.php');
+require_once('UserManager.php');
 require_once('ControllerNode.php');
 
 class LoginControllerNode extends ControllerNode
 {
   public $userSupplier = null;
 
-  public function __construct($userSupplier) {
+  public function __construct($userManager) {
     parent::__construct("/login$/");
-    $this->userSupplier = $userSupplier;
+    $this->userManager = $userManager;
   }
 
   public function evaluate($request) {
@@ -21,19 +22,16 @@ class LoginControllerNode extends ControllerNode
     $password = $postVars['password'];
     $sessionVars = &$request->getSessionVars();
 
-    $u = $this->userSupplier->get();
-    if($u->login($username, $password)) {
+    $u = $this->userManager->login($username, $password);
+    if($u) {
       error_log("$username login successful");
       $sessionVars['user'] = serialize($u);
     } else {
       error_log("$username login unsuccessful");        
       unset($sessionVars['user']);
-      $u = 0;
       error_log("error logging in please try again\n");
     }
-  
   }
-
 }
 
 ?>

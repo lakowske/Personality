@@ -17,7 +17,8 @@ class LoginControllerNodeTest extends PHPUnit_Framework_TestCase
   }
 
   public function setUp() {
-    $user = $this->getMock('User', array('login'));
+    $user = $this->getMockBuilder('User')->disableOriginalConstructor()->getMock();
+
     $this->username = 'testuser';
     $this->username2 = 'jackson';
     $this->password = 'password';

@@ -6,11 +6,11 @@ require_once('ControllerNode.php');
  */
 class UploadControllerNode extends ControllerNode
 {
-  private $uploadDir;
+  private $uploadManager;
 
-  public function __construct($uploadDir) {
+  public function __construct($uploadManager) {
     parent::__construct("/upload$/");
-    $this->uploadDir = $uploadDir;
+    $this->uploadManager = $uploadManager;
   }
 
   public function evaluate($request) {
@@ -20,10 +20,14 @@ class UploadControllerNode extends ControllerNode
   public function run($request) {
     if ($_FILES['datafile']['error'] > 0) {
       error_log("Return Code: " . $_FILES['file']['error']);
+      return false;
     }
     
-    move_uploaded_file($_FILES['datafile']['tmp_name'], $this->uploadDir . $_FILES['datafile']['name']);
-    error_log("stored file: " . $this->uploadDir . $_FILES['datafile']['name']);
+    $filename = $this->uploadManager->getNewFilename($_FILES['datafile']['name']);
+    $path = $this->uploadManager->getPath($filename);
+    move_uploaded_file($_FILES['datafile']['tmp_name'], $path);
+    error_log("stored file: " . $filename);
+    return array('filename' => $filename, 'path' => $path);
   }
 }
 
