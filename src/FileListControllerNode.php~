@@ -1,0 +1,10 @@
+<?php
+require_once('ControllerNode.php');
+/**
+ * FileListControllerNode retrieves a list of files for a user.
+ */
+class FileListControllerNode extends ControllerNode
+{
+  private $uploadControllerNode;
+  private $fileManager;
+  private $userSupplier;

@@ -6,6 +6,7 @@ CREATE TABLE file (
         gid                 	 int REFERENCES pgroup (gid),
 	fpath		    	 varchar(256) UNIQUE,
 	filename		 varchar(256) NOT NULL,
+	origname		 varchar(256) NOT NULL,
        	create_date	    	 timestamp with time zone,
 	group_permissions	 int REFERENCES permission (permid)
 );

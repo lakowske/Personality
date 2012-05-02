@@ -23,11 +23,12 @@ class UploadControllerNode extends ControllerNode
       return false;
     }
     
-    $filename = $this->uploadManager->getNewFilename($_FILES['datafile']['name']);
+    $origname = $_FILES['datafile']['name'];
+    $filename = $this->uploadManager->getNewFilename($origname);
     $path = $this->uploadManager->getPath($filename);
     move_uploaded_file($_FILES['datafile']['tmp_name'], $path);
     error_log("stored file: " . $filename);
-    return array('filename' => $filename, 'path' => $path);
+    return array('origname' => $origname, 'filename' => $filename, 'path' => $path);
   }
 }
 

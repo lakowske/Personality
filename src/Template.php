@@ -29,7 +29,6 @@ class Template {
     $smarty->compile_dir = '/tmp';
     $smarty->config_dir = $prefix . '/configs';
     $smarty->cache_dir = $prefix . '/cache';
-    echo $prefix;
     $this->smarty->display($this->filename);
   }
 

@@ -8,14 +8,14 @@ class Request
   private $serverVars;
 
   public function __construct(&$postVars, &$sessionVars, &$serverVars, $requestMethod) {
-    $this->postVars = $postVars;
-    $this->sessionVars = $sessionVars;
+    $this->postVars = &$postVars;
+    $this->sessionVars = &$sessionVars;
     $this->requestMethod = $requestMethod;
-    $this->serverVars = $serverVars;
+    $this->serverVars = &$serverVars;
   }
 
   public static function fromEnvironmentVariables() {
-    $instance = new self($_POST, $_SESSION, $_SERVER, $_SERVER['REQUEST_METHOD']);
+    $instance = new self(&$_POST, &$_SESSION, &$_SERVER, $_SERVER['REQUEST_METHOD']);
     return $instance;
   }
 

@@ -16,13 +16,14 @@ class LoginControllerNode extends ControllerNode
     return parent::evaluate($request) && $request->isPost();
   }
 
-  public function run($request) {
+  public function run(&$request) {
     $postVars = $request->getPostVars();
     $username = $postVars['username'];
     $password = $postVars['password'];
     $sessionVars = &$request->getSessionVars();
 
     $u = $this->userManager->login($username, $password);
+
     if($u) {
       error_log("$username login successful");
       $sessionVars['user'] = serialize($u);

@@ -17,15 +17,17 @@ class ControllerTree
   }
 
   public function run($request) {
+    $result = "";
     foreach($this->controllerNodes as $controllerNode) {
 
       $result = $controllerNode->evaluate($request);
 
       if($result) {
-	$controllerNode->run($request);
+	$result .= $controllerNode->run($request);
       }
 
     }
+    return $result;
   }
 
 }

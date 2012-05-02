@@ -10,7 +10,7 @@ class DownloadControllerNode extends ControllerNode
   private $fileManager;
 
   public function __construct($fileManager) {
-    parent::__construct("/^\/file/");
+    parent::__construct("/^\/file\//");
     $this->fileManager = $fileManager;
   }
 
