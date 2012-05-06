@@ -21,7 +21,7 @@ class FileManager
   function get_user_files($uid) {
     $d = $this->databaseSupplier->get();
     $r = $d->query("select uid, gid, fpath, filename, origname, create_date, group_permissions from file where uid = '{$uid}'");
-    $arr = pg_fetch_all($r);
+    $arr = $d->fetch_all();
     return $arr;
   }
 

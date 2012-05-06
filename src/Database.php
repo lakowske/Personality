@@ -33,6 +33,13 @@ class Database
     return pg_fetch_row($this->resource);
   }
 
+  function fetch_all() {
+    if ($this->resource == 0) {
+      return FALSE;
+    }
+    return pg_fetch_all($this->resource);
+  }
+    
   function num_rows() {
     if ($this->resource == 0) {
       return -1;

@@ -53,7 +53,7 @@ class UserManager
 
     $r = $d->query("select gid from pgroup where name = '$username'");
 
-    $r = pg_fetch_row($r);
+    $r = $d->fetch_row();
 
     $g_id = $r[0];
     
