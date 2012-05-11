@@ -8,6 +8,10 @@ class PathManager
     $this->server = $server;
   }
 
+  public static function get() {
+    return new PathManager(NULL);
+  }
+
   /**
    * Returns the base path url to the script.
    * i.e.
@@ -18,6 +22,10 @@ class PathManager
     $scriptName = $this->server['SCRIPT_NAME'];
     return strstr($scriptName, '.php', TRUE);
   }
-    
+
+  public function templateDir() {
+    $templateDir = __DIR__ . "/../templates";
+    return $templateDir;
+  }
 
 }

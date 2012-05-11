@@ -1,5 +1,12 @@
 <?php
 
+function regReqPred($pattern) {
+  return function ($request) use ($pattern) {
+    $server = $request->getServerVars();
+    return preg_match($pattern, $server['PATH_INFO']) > 0;
+  };
+}      
+
 class Request
 {
   private $postVars;

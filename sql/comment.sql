@@ -13,7 +13,7 @@ CREATE TABLE comment (
 );
 
 GRANT ALL ON comment_serial TO "www-data";
-GRANT ALL ON comment_serial TO prefedit;
+GRANT ALL ON comment_serial TO seth;
 
 GRANT ALL ON comment TO "www-data";
-GRANT ALL ON comment TO prefedit;
+GRANT ALL ON comment TO seth;

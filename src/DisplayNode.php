@@ -2,6 +2,13 @@
 require_once('Template.php');
 require_once('ControllerNode.php');
 
+function displayFunc($templateName, $templateSupplier) {
+  return function ($request) use ($templateSupplier, $templateName) {
+    $h = $this->templateSupplier->get($templateName);
+    return $h->display();
+  };
+}
+
 class DisplayNode extends ControllerNode
 {
   private $requestPredicate;
