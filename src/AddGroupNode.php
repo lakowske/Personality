@@ -18,7 +18,6 @@ class AddGroupNode extends ControllerNode
   }
 
   public function run($request) {
-    echo "in AddGroupNode run";
     $postVars = $request->getPostVars();
     $groupname = $postVars['groupname'];
     $description = $postVars['description'];

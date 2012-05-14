@@ -20,7 +20,7 @@
 			<option>code</option>
 		  </select><BR>
         Content:<BR>
-        <textarea name="content" rows="10" cols="50">{$contents}</textarea>
+        <textarea name="content" rows="10" cols="50">{$content}</textarea>
         <BR>
         <input type="submit" name="submit" value="Submit">
         <input type="submit" name="submit" value="Preview">

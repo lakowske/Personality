@@ -4,8 +4,27 @@ require_once('ControllerNode.php');
 
 function displayFunc($templateName, $templateSupplier) {
   return function ($request) use ($templateSupplier, $templateName) {
-    $h = $this->templateSupplier->get($templateName);
-    return $h->display();
+    $t = getTemplateFunc($templateName, $templateSupplier);
+    return $t($request)->display();
+  };
+}
+
+function previewFunc($templateName, $templateSupplier) {
+  return function ($request) use ($templateSupplier, $templateName) {
+    $tf = getTemplateFunc($templateName, $templateSupplier);
+    $t = $tf($request);
+    $postVars = $request->getPostVars();
+    foreach ($postVars as $key => $value) {
+      $t->add_variable($key, $value);
+    }
+    return $t->display();
+  };
+}
+  
+function getTemplateFunc($templateName, $templateSupplier) {
+  return function ($request) use ($templateSupplier, $templateName) {
+    $h = $templateSupplier->get($templateName);
+    return $h;
   };
 }
 
