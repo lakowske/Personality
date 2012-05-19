@@ -25,7 +25,7 @@
     </tr>
     <tr>
       <td>
-        {$contents}<BR><BR>
+        {$content}<BR><BR>
         
       </td>
     </tr>

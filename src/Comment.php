@@ -1,11 +1,11 @@
 <?php
 
 
-class Comment extends Template
+class Comment
 {
    public $cid = Null;
    public $title = '';
-   public $contents = '';
+   public $content = '';
    public $uid = '';
    public $username = '';
    public $type = '';
@@ -14,7 +14,7 @@ class Comment extends Template
 
 
    function marshal() {
-     $this->contents = pg_escape_string($this->contents);
+     $this->contents = pg_escape_string($this->content);
    }
 
 }

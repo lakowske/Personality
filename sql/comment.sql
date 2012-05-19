@@ -7,9 +7,7 @@ CREATE TABLE comment (
         title           varchar(128),
 	contents	text,
 	type		varchar(128),
-        cdate           timestamp with time zone, --creatation date
-        rcid            int,                      --refering comment
-        rsid            int                       --refering story(still a comment)
+        cdate           timestamp with time zone --creation date
 );
 
 GRANT ALL ON comment_serial TO "www-data";

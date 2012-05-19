@@ -28,20 +28,19 @@ class Template {
     $this->smarty->assign($var_name, $var_value);
   }
   
-  function display() {
+  function setup() {
     $prefix = $this->dir;
     $dirs = array_merge($this->templateDirs, array($prefix . '/templates'));
-    
     $this->smarty->template_dir = $dirs;
-    //$smarty->compile_dir = '/tmp';
-    //$smarty->config_dir = $prefix . '/configs';
-    //$smarty->cache_dir = $prefix . '/cache';
-    //$smarty->caching = false;
+  }
 
+  function display() {
+    $this->setup();
     $this->smarty->display($this->filename);
   }
 
   function fetch() {
+    $this->setup();
     return $this->smarty->fetch($this->filename);
   }
   

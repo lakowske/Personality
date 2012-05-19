@@ -20,9 +20,9 @@ class ControllerTree
     $result = "";
     foreach($this->controllerNodes as $controllerNode) {
 
-      $result = $controllerNode->evaluate($request);
+      $run = $controllerNode->evaluate($request);
 
-      if($result) {
+      if($run) {
 	$result .= $controllerNode->run($request);
       }
 

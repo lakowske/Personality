@@ -7,8 +7,7 @@ CREATE TABLE file (
 	fpath		    	 varchar(256) UNIQUE,
 	filename		 varchar(256) NOT NULL,
 	origname		 varchar(256) NOT NULL,
-       	create_date	    	 timestamp with time zone,
-	group_permissions	 int REFERENCES permission (permid)
+       	create_date	    	 timestamp with time zone
 );
 
 GRANT ALL ON file_serial TO "www-data";
