@@ -42,8 +42,7 @@ class FileUploadControllerNode extends ControllerNode
     $filename = $result['filename'];
     $filepath = $result['path'];
 
-    $perm_id = $this->fileManager->getReadOnlyPermissions();
-    $this->fileManager->add_file($origname, $filename, $filepath, $user->uid, $user->gid, $perm_id);
+    $this->fileManager->add_file($origname, $filename, $filepath, $user->uid, $user->gid);
   }
 }
 

@@ -1,5 +1,4 @@
-<form method="post"
- action="addentry">
+<form method="post" action="{$actionlink}">
 <table cellpadding="0" cellspacing="0" border="0" bgcolor="#eeeeee" width="100%"
  style="text-align: left;">
   <tbody>

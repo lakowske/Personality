@@ -61,16 +61,15 @@ class CommentManager
   }
   
   function update_entry($comment) {
-    $d = $databaseSupplier->get();
+    $d = $this->databaseSupplier->get();
     $d->query("BEGIN");
     
     $comment->marshal();
     
-    $d->query("update comment set uid='$comment->uid', "
+    $d->query("update comment set "
 	      . "username='$comment->username', "
 	      . "title='$comment->title', contents='$comment->contents', "
 	      //. "cdate='$comment->tstamp', "
-	      . "rcid='$comment->rcid', rsid='$comment->rsid', "
 	      . "type='$comment->type' "
 	      . "where cid = '$comment->cid'"
 	      );
@@ -86,12 +85,23 @@ class CommentManager
      
      $d->query("COMMIT");
   }
+
+  /*
+   * last_entries returns the comment ids of the most recent entries.
+   */
+  function last_entries() {
+     $d = $this->databaseSupplier->get();
+     
+     $d->query("select cid from comment order by cdate");
+   
+     $cids = array();
+     foreach($d->fetch_all() as $result) {
+       array_push($cids, $result['cid']);
+     }
+     
+     return $cids;
+  }
   
 }
 
 ?>
-
-
-
-
-}

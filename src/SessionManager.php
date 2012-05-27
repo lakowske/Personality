@@ -12,7 +12,7 @@ class SessionManager
   function SessionManager($databaseSupplier) {
     $this->databaseSupplier = $databaseSupplier;
     $this->d = $this->databaseSupplier->get();
-    $this->life_time = get_cfg_var("session.gc_maxlifetime");
+    $this->life_time = 3600 * 2;
 
     session_set_save_handler(
 			     array( &$this, "open" ),
@@ -39,15 +39,17 @@ class SessionManager
 
     $time = time();
     
-    error_log($session_id);
+    error_log('session id: ' . $session_id);
     $newid = pg_escape_string($session_id);
-    $sql = "SELECT data FROM session WHERE session_id = '$newid' AND expires > $time";
+    $sql = "SELECT data FROM session WHERE session_id = '$newid' AND expire_time > CURRENT_TIMESTAMP";
     $rs = $this->d->query($sql);
-    error_log($this->d->num_rows());
+    error_log('matching sessions: ' . $this->d->num_rows());
 
     if ($this->d->num_rows() > 0) {
       $row = $this->d->fetch_row();
       $data = $row[0];
+    } else {
+      $this->write($session_id, serialize($_SESSION));
     }
 
     return $data;
@@ -55,22 +57,27 @@ class SessionManager
 
   function write ($session_id, $data) {
     $time = time() + $this->life_time;
-    
-    error_log($data);
+    $sqlDateTimeExpire = date('Y-m-d H:i:s', $time);    
+    $now = time();
+    $sqlDateTimeNow = date('Y-m-d H:i:s', $now);  
+  
     $newid = pg_escape_string($session_id);
     $newdata = pg_escape_string($data);
-    error_log($newdata);
+    error_log('writing: ' . $data);
+    error_log('to session_id: ' . $newid);
+    error_log("newdata: $newdata");
     $existSql = "Select session_id FROM session WHERE session_id = '$newid'";
     $this->d->query($existSql);
     $sql = '';
     if ($this->d->num_rows() > 0) {
-      $sql = "UPDATE session SET data = '$newdata', expires = $time WHERE session_id = '$newid'";
+      $sql = "UPDATE session SET data = '$newdata', expires = $time, expire_time = '$sqlDateTimeExpire' WHERE session_id = '$newid'";
     } else {
-      $sql = "INSERT INTO session VALUES('$newid', $time, '$newdata')";
+      $sql = "INSERT INTO session VALUES('$newid', $time, '$sqlDateTimeNow', '$sqlDateTimeExpire', '$newdata')";
     }
-
+    error_log($sql);
+    $this->d->query("BEGIN");
     $this->d->query($sql);
-    
+    $this->d->query("COMMIT");
     return TRUE;
   }
 
@@ -78,13 +85,18 @@ class SessionManager
 
     $newid = pg_escape_string($session_id);
     $sql = "DELETE FROM session WHERE session_id = '$newid'";
-    $this->d->query($sql);
 
+    $this->d->query("BEGIN");
+    $this->d->query($sql);
+    $this->d->query("COMMIT");
   }
 
   function gc() {
-    $sql = "DELETE FROM session WHERE expires < UNIX_TIMESTAMP();";
+    $sql = "DELETE FROM session WHERE expire_time > CURRENT_TIMESTAMP;";
+
+    $this->d->query("BEGIN");
     $this->d->query($sql);
+    $this->d->query("COMMIT");
     
     return true;
   }

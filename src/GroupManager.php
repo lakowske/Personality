@@ -10,11 +10,14 @@ class GroupManager
 
   function addGroup($groupName, $description) {
     $d = $this->databaseSupplier->get();
+    
+    $dbGroupName = $d->escape_string($groupName);
+    $dbDescription = $d->escape_string($description);
 
     $d->query("BEGIN");
 
     $r = $d->query("insert into pgroup (name, description) "
-		   . "values('{$groupName}', '{$description}')");
+		   . "values('{$dbGroupName}', '{$dbDescription}')");
 
     $d->query("COMMIT");
   }

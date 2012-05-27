@@ -48,7 +48,8 @@ class DisplayNode extends ControllerNode
   
   public function run($request) {
     $h = $this->templateSupplier->get($this->templateName);
-    return $h->display();
+    $h->add_variable('scriptBasePath', $request->getPathManager()->scriptBasePath());
+    return $h->fetch();
   }
 
 }

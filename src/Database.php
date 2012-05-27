@@ -12,7 +12,7 @@ class Database
      $dbpass = $GLOBALS['dbpass'];
      $dbport = $GLOBALS['dbport'];
 
-     error_log('connecting to db as' . $GLOBALS['dbuser']);
+     error_log('connecting to db as ' . $GLOBALS['dbuser']);
      $this->link = pg_connect("host=$dbhost password=$dbpass dbname=$dbname user=$dbuser");
   }
 
@@ -46,6 +46,11 @@ class Database
     }
     return pg_numrows($this->resource);
   }
+
+  function escape_string($string) {
+    return pg_escape_string($string);
+  }
+
 }
 
 function num_rows($r) {

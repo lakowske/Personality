@@ -26,10 +26,11 @@ class FileListControllerNode extends ControllerNode
       return;
     }
 
+    $scriptBasePath = $request->getPathManager()->scriptBasePath();
     $arr = $this->fileManager->get_user_files($user->uid);
     $resultString = "<table>";
     foreach ($arr as $row) {
-      $resultString .= "<tr><td><a href='file/{$row['filename']}'>{$row['origname']}</a></td></tr>";
+      $resultString .= "<tr><td><a href='$scriptBasePath/file/{$row['filename']}'>{$row['origname']}</a></td></tr>";
     }
     $resultString .= "</table>";
 

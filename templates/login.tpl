@@ -1,4 +1,4 @@
-<form method="post" action="login">
+<form method="post" action="{$scriptBasePath}/login">
   <table class="login">
     <tbody>
       <tr><th class="header">Login:</th></tr>

@@ -13,25 +13,25 @@ class FileManager
 
   function get_file($filename) {
     $d = $this->databaseSupplier->get();
-    $r = $d->query("select uid, gid, fpath, filename, create_date, group_permissions from file where filename = '{$filename}'");
+    $r = $d->query("select uid, gid, fpath, filename, create_date from file where filename = '{$filename}'");
     $row = pg_fetch_row($r);
     return $row;
   }
 
   function get_user_files($uid) {
     $d = $this->databaseSupplier->get();
-    $r = $d->query("select uid, gid, fpath, filename, origname, create_date, group_permissions from file where uid = '{$uid}'");
+    $r = $d->query("select uid, gid, fpath, filename, origname, create_date from file where uid = '{$uid}'");
     $arr = $d->fetch_all();
     return $arr;
   }
 
-  function add_file($origname, $filename, $fpath, $uid, $gid, $perm_id) {
+  function add_file($origname, $filename, $fpath, $uid, $gid) {
     $d = $this->databaseSupplier->get();
 
     $d->query("BEGIN");
 
-    $r = $d->query("insert into file (uid, gid, fpath, filename, origname, create_date, group_permissions) "
-		   . "values('{$uid}', '{$gid}', '{$fpath}', '{$filename}', '{$origname}', current_timestamp, '{$perm_id}')");
+    $r = $d->query("insert into file (uid, gid, fpath, filename, origname, create_date) "
+		   . "values('{$uid}', '{$gid}', '{$fpath}', '{$filename}', '{$origname}', current_timestamp)");
 
     if ($r == FALSE) {
       return FALSE;

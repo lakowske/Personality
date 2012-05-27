@@ -13,12 +13,14 @@ class Request
   private $sessionVars;
   private $requestMethod;
   private $serverVars;
+  private $pathManager;
 
   public function __construct(&$postVars, &$sessionVars, &$serverVars, $requestMethod) {
     $this->postVars = &$postVars;
     $this->sessionVars = &$sessionVars;
     $this->requestMethod = $requestMethod;
     $this->serverVars = &$serverVars;
+    $this->pathManager = new PathManager(&$serverVars);
   }
 
   public static function fromEnvironmentVariables() {
@@ -49,6 +51,11 @@ class Request
   public function &getServerVars() {
     return $this->serverVars;
   }
+
+  public function &getPathManager() {
+    return $this->pathManager;
+  }
+
 }
 
   
