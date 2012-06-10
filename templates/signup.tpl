@@ -1,4 +1,4 @@
-<form method="post" action="signup">
+<form method="post" action="{$scriptBasePath}/signup">
   <table class="signup">
     <tbody>
       <tr><th class="header">Sign up:</th></tr>

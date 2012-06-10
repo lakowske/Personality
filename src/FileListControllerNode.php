@@ -1,16 +1,17 @@
 <?php
-require_once('ControllerNode.php');
+require_once('Node.php');
 /**
  * FileListControllerNode retrieves a list of files for a user.
  */
-class FileListControllerNode extends ControllerNode
+class FileListControllerNode extends Node
 {
   private $uploadControllerNode;
   private $fileManager;
   private $userSupplier;
 
-  public function __construct($userSupplier, $fileManager) {
-    parent::__construct("/^\/filelist/");
+  public function __construct($userSupplier, $fileManager, $predicate) {
+    parent::__construct($predicate, $this);
+
     $this->userSupplier = $userSupplier;
     $this->fileManager = $fileManager;
   }

@@ -1,27 +1,23 @@
 <?php
-require_once('ControllerNode.php');
+require_once('Node.php');
 
 /**
  * FileUploadControllerNode stores file uploads to an upload directory and makes
  * a file record in the database.
  */
-class FileUploadControllerNode extends ControllerNode
+class FileUploadControllerNode extends Node
 {
   private $uploadControllerNode;
   private $fileManager;
   private $uploadManager;
   private $userSupplier;
 
-  public function __construct($uploadControllerNode, $fileManager, $uploadManager, $userSupplier) {
-    parent::__construct("/upload$/");
+  public function __construct($uploadControllerNode, $fileManager, $uploadManager, $userSupplier, $predicate) {
+    parent::__construct($predicate, $this);
     $this->uploadControllerNode = $uploadControllerNode;
     $this->fileManager = $fileManager;
     $this->uploadManager = $uploadManager;
     $this->userSupplier = $userSupplier;
-  }
-
-  public function evaluate($request) {
-    return parent::evaluate($request) && $request->isPost();
   }
 
   public function run($request) {

@@ -26,21 +26,20 @@ class CommentHtmlDisplayNode extends CommentRetrieverNode
     $user = $this->userSupplier->get();
 
     if ($user != null) {
-         if($user->gid == 1) {
-            $links = "<a href=\"/index/editentry/$cid\">";
-            $links .= "Edit</a> |";
-            $links .= "<a href=\"/index/deleteentry/$cid\">";
-            $links .= "Delete</a> |";
-            $template->add_variable('entry_actions', $links);
-         }
+      $links = '';
+      $links .= "<a href=\"$base/edit/comment/$cid\">";
+      $links .= "Edit</a> |";
+      $links .= "<a href=\"$base/delete/comment/$cid\">";
+      $links .= "Delete</a> |";
+      $template->add_variable('entry_actions', $links);
     } else {
       $links = '';
       $links .= "<a href=\"$base/viewchildren/$cid\">";
       $links .= "View Replies($comment->children)</a> |";
-      $links .= "<a href=\"$base/addentry/$cid\">";
+      $links .= "<a href=\"$base/create/comment/$cid\">";
       $links .= " Reply</a>";
-      $template->add_variable('entry_actions', $links);
-      //$template->add_variable('entry_actions', $this->formatted_date($cid));      
+      //$template->add_variable('entry_actions', $links);
+      $template->add_variable('entry_actions', $this->formatted_date($cid));
     }
     
     $template->add_variable('title', $comment->title);
@@ -50,20 +49,17 @@ class CommentHtmlDisplayNode extends CommentRetrieverNode
     return $template->fetch();
   }
   
-  /*
+
   function formatted_date($cid) {
     $d = $this->databaseSupplier->get();
-    $d->query("BEGIN");
-    $r = $d->query("select to_char(cdate, 'MM/DD/YYYY HH12:MI:SS PM') "
-		   . "from comment where cid='$cid'");
-
-    $d->query("COMMIT");
-    $row = $d->fetch_row();
-
-    return $row[0];
     
+    $r = $d->query("select to_char(cdate, 'MM/DD/YYYY HH12:MI:SS PM') "
+    		   . "from comment where cid='$cid'");
+
+    $row = $d->fetch_row();
+    return $row[0];
   } 
-  */      
+
 
 }
 

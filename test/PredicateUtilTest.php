@@ -17,7 +17,7 @@ class PredicateUtilTest extends PHPUnit_Framework_TestCase
   public function testAnd() {
     $predicate = a($this->p1, $this->p2);
     $predicate2 = a($this->p1, $this->p2, $this->p3);
-
+    
     $this->assertTrue($predicate('hi'));
     $this->assertFalse($predicate2('hi'));
 
@@ -28,6 +28,10 @@ class PredicateUtilTest extends PHPUnit_Framework_TestCase
     $this->assertTrue($predicate('hi'));
   }
 
+  public function testNot() {
+    $predicate = n($this->p1);
+    $this->assertFalse($predicate('hi'));
+  }
 }
 
 ?>

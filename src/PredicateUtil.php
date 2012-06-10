@@ -1,5 +1,37 @@
 <?php
 
+function n($toNegate) {
+  $predicate = function ($argument) use ($toNegate) {
+    return !$toNegate($argument);
+  };
+  
+  return $predicate;
+}
+
+function t() {
+  $predicate = function ($argument) {
+    return true;
+  };
+
+  return $predicate;
+}
+
+function f() {
+  $predicate = function ($argument) {
+    return false;
+  };
+
+  return $predicate;
+}
+
+function emptyFunc() {
+  $function = function($argument) {
+    return '';
+  };
+
+  return $function;
+}
+
 function a() {
   $numargs = func_num_args();
   if ($numargs < 2) {

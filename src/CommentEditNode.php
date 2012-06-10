@@ -32,7 +32,7 @@ class CommentEditNode extends CommentRetrieverNode
     $template->add_variable('content', $comment->content);
     $template->add_variable('username', $comment->username);
     $template->add_variable('cid', $comment->cid);
-    $template->add_variable('actionlink', "$base/update/comment/{$cid}");
+    $template->add_variable('actionlink', "$base/edit/comment/{$cid}");
     return $template->fetch();
   }
 

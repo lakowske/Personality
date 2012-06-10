@@ -1,28 +1,26 @@
 <?php
 require_once('ControllerNode.php');
-
+require_once('Node.php');
 /**
  * DownloadControllerNode fullfills download requests.
  */
 
-class DownloadControllerNode extends ControllerNode
+class DownloadControllerNode extends Node
 {
   private $fileManager;
+  private $fileTypeManager;
+  private $regPred;
 
-  public function __construct($fileManager) {
-    parent::__construct("/^\/file\//");
+  public function __construct($fileManager, $fileTypeManager, $regPred, $predicate) {
+    parent::__construct($predicate, $this);
+    $this->regPred = $regPred;
+    $this->fileTypeManager = $fileTypeManager;
     $this->fileManager = $fileManager;
   }
 
-  public function evaluate($request) {
-    return parent::evaluate($request) && $request->isGet();
-  }
-
   public function run($request) {
-    $server = $request->getServerVars();
-    $path_info = $server['PATH_INFO'];
-    $result = preg_match_all('/^\/file\/(.*)/', $path_info, $arr, PREG_PATTERN_ORDER);
-    $filename = $arr[1][0];
+    $result = $this->regPred->getMatches();
+    $filename = $result[1][0];
     $r = $this->fileManager->get_file($filename);
     if ($r == NULL) {
       return FALSE;
@@ -32,7 +30,8 @@ class DownloadControllerNode extends ControllerNode
     if ($fd = fopen($filepath, "r")) {
       $fsize = filesize($filepath);
       $path_parts = pathinfo($filepath);
-      header("Content-type: application/octet-stream");
+      $file_type = $this->fileTypeManager->filetype($filepath);
+      header("Content-type: $file_type");
       header("Content-Disposition: filename=\"".$path_parts["basename"]."\"");
       header("Content-length: $fsize");
       header("Cache-control: private"); //use this to open files directly

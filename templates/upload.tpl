@@ -1,4 +1,4 @@
-<form method="post" action="{$scriptBasePath}/upload" enctype="multipart/form-data">
+<form method="post" action="{$scriptBasePath}/create/file" enctype="multipart/form-data">
 <table class="uploadfile">
 <tbody>
       <tr><th class="header">Upload File:</th></tr>

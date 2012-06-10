@@ -20,7 +20,7 @@ class SignupControllerNode extends ControllerNode
     $password = $postVars['password'];
     $email = $postVars['email'];
 
-    $this->userManager->add_user($username, $password, '', $email);
+    $this->userManager->add_user($username, $password, $username, $email);
   }
   
 }

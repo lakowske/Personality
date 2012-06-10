@@ -101,7 +101,19 @@ class CommentManager
      
      return $cids;
   }
-  
+
+  function last_entries_of_type($type) {
+     $d = $this->databaseSupplier->get();
+     
+     $d->query("select cid from comment where type = '$type' order by cdate");
+   
+     $cids = array();
+     foreach($d->fetch_all() as $result) {
+       array_push($cids, $result['cid']);
+     }
+     
+     return $cids;
+  }    
 }
 
 ?>

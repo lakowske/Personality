@@ -48,9 +48,7 @@ class SessionManager
     if ($this->d->num_rows() > 0) {
       $row = $this->d->fetch_row();
       $data = $row[0];
-    } else {
-      $this->write($session_id, serialize($_SESSION));
-    }
+    } 
 
     return $data;
   }
