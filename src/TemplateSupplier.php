@@ -5,11 +5,13 @@ class TemplateSupplier
 {
   private $dir;
   private $templateDirs;
+  private $scriptBasePath;
 
-  public function __construct($dir, $templateDirs, $staticBasePath) {
+  public function __construct($dir, $templateDirs, $staticBasePath, $scriptBasePath) {
     $this->dir = $dir;
     $this->templateDirs = $templateDirs;
     $this->staticBasePath = $staticBasePath;
+    $this->scriptBasePath = $scriptBasePath;
   }
 
   public function get($template) {
@@ -18,6 +20,7 @@ class TemplateSupplier
     $t->setTemplateDirs($this->templateDirs);
     $t->setTemplate($template);
     $t->add_variable('staticBasePath', $this->staticBasePath);
+    $t->add_variable('scriptBasePath', $this->scriptBasePath);
     return $t;
   }
 

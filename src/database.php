@@ -2,7 +2,7 @@
 require_once('Database.php');
 require_once('Supplier.php');
 
-$database = new Database();
+$database = Database::fromGlobals();
 $databaseSupplier = new Supplier($database);
 
 ?>

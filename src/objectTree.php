@@ -55,7 +55,13 @@ $fileTypeManager = new FileTypeManager();
 $groupManager = new GroupManager($databaseSupplier);
 $uploadManager = new UploadManager('upload/');
 
-$templateSupplier = new TemplateSupplier(__DIR__, array($pathManager->templateDir()), $staticURLSupplier->get());
+$scriptBasePath = PathManager::buildScriptBasePath(__FILE__);  
+
+if ($_SERVER != NULL) {
+  $scriptBasePath = PathManager::buildScriptBasePath($_SERVER);
+}
+
+$templateSupplier = new TemplateSupplier(__DIR__, array($pathManager->templateDir()), $staticURLSupplier->get(), $scriptBasePath);
 
 //comment predicates
 $commentsDisplayPred         = new RegPred("/^\/comments$/");
@@ -67,7 +73,7 @@ $commentDisplayRegPred       = new RegPred("/^\/view\/comment\/(\d+)$/");
 $commentAddRegPred           = new RegPred("/^\/create\/comment$/");
 $downloadRegPred             = new RegPred("/^\/file\/(.*)/");
 $filesReadRegPred            = new RegPred("/^\/files$/");
-$fileCreateRegPred           = new RegPred("/^\/create\/file$/");
+$createFileRegPred           = new RegPred("/^\/create\/file$/");
 
 $menuDisplayNode = new DisplayNode("/menu$/", $isGet,
 				   'menu.tpl', $templateSupplier);
@@ -75,8 +81,11 @@ $loginDisplayNode = new DisplayNode("/login$/", $isGet,
 				    'login.tpl', $templateSupplier);
 $signupDisplayNode = new DisplayNode("/signup$/", $isGet,
 				     'signup.tpl', $templateSupplier);
-$uploadDisplayNode = new DisplayNode("/^\/create\/file$/", $isGet,
-				     'upload.tpl', $templateSupplier);
+
+$uploadDisplay = new DisplayNode("/^\/create\/file$/", $isGet,
+				 'upload.tpl', $templateSupplier);
+$uploadDisplayNode = new Node(a(o($filesReadRegPred->get(), $createFileRegPred->get()), $isGet), displayFunc('upload.tpl', $templateSupplier));
+
 $addGroupDisplayNode = new DisplayNode("/addgroup$/", $isGet,
 				       'addgroup.tpl', $templateSupplier);
 $addEntryDisplayNode = new DisplayNode("/addentry$/", $isGet,
@@ -94,9 +103,11 @@ $downloadControllerNode = new DownloadControllerNode($fileManager, $fileTypeMana
 
 $uploadControllerNode = new UploadControllerNode($uploadManager);
 
-$fileUploadControllerNode = new FileUploadControllerNode($uploadControllerNode, $fileManager, $uploadManager,$userSupplierNode,a($fileCreateRegPred->get(), $isPost));
+$fileUploadControllerNode = new FileUploadControllerNode($uploadControllerNode, $fileManager, $uploadManager,$userSupplierNode,a($createFileRegPred->get(), $isPost));
 
 $fileListControllerNode = new FileListControllerNode($userSupplierNode, $fileManager, $filesReadRegPred->get());
+
+
 
 $addGroupNode = new AddGroupNode($groupManager);
 
@@ -104,10 +115,9 @@ $commentHtmlDisplay = new CommentHtmlDisplayNode($commentManager, $userSupplierN
 
 $commentsHtmlDisplay = new CommentsHtmlDisplay($commentHtmlDisplay);
 
-$commentsDisplayNode = new CommentsDisplayNode('comment', $commentManager, $commentsHtmlDisplay, a(o($commentsDisplayPred->get(), $defaultDisplayPred->get()), $isGet));
+$commentsDisplayNode = new CommentsDisplayNode($commentManager, $commentsHtmlDisplay, byReference($commentManager, 1), a(o($commentsDisplayPred->get(), $defaultDisplayPred->get()), $isGet));
 
-$codeDisplayNode = new CommentsDisplayNode('code', $commentManager, $commentsHtmlDisplay, a($codeDisplayPred->get(), $isGet));
-
+$codeDisplayNode = new CommentsDisplayNode($commentManager, $commentsHtmlDisplay, byType($commentManager, 'code'), a($codeDisplayPred->get(), $isGet));
 
 $commentPreviewNode = new Node(a($commentAddRegPred->get(), $isPostSubmitPreview),
 			       previewFunc('addentry.tpl', $templateSupplier));

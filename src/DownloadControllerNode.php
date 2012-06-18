@@ -26,19 +26,24 @@ class DownloadControllerNode extends Node
       return FALSE;
     }
     $filepath = $r[2];
-    
-    if ($fd = fopen($filepath, "r")) {
+
+    if (file_exists($filepath)) {
       $fsize = filesize($filepath);
       $path_parts = pathinfo($filepath);
       $file_type = $this->fileTypeManager->filetype($filepath);
-      header("Content-type: $file_type");
+      header("Content-Description: File Transfer");
+      header("Content-Type: $file_type");
       header("Content-Disposition: filename=\"".$path_parts["basename"]."\"");
-      header("Content-length: $fsize");
-      header("Cache-control: private"); //use this to open files directly
-      while(!feof($fd)) {
-        $buffer = fread($fd, 2048);
-        echo $buffer;
-      }
+      header("Expires: 0");
+      error_log("file path: $filepath");
+      error_log("Content-length: $fsize");
+
+      header("Content-Length: $fsize");
+      header("Cache-Control: must-revalidate"); //use this to open files directly
+      ob_clean();
+      flush();
+      readfile($filepath);
+
       return TRUE;
     }
 

@@ -5,15 +5,19 @@ class Database
   var $link = '';
   var $resource = 0;  //the resource from the last query
   
-  function Database() {
+  function Database($user, $pass, $database, $host, $port) {
+     error_log("connecting to $host / $database as $user");
+     $this->link = pg_connect("host=$host password=$pass dbname=$database user=$user");
+  }
+  
+  public static function fromGlobals() {
      $dbuser = $GLOBALS['dbuser'];
      $dbname = $GLOBALS['dbname'];
      $dbhost = $GLOBALS['dbhost'];
      $dbpass = $GLOBALS['dbpass'];
      $dbport = $GLOBALS['dbport'];
-
-     error_log('connecting to db as ' . $GLOBALS['dbuser']);
-     $this->link = pg_connect("host=$dbhost password=$dbpass dbname=$dbname user=$dbuser");
+     
+     return new Database($dbuser, $dbpass, $dbname, $dbhost, $dbport);
   }
 
   function query($q) {

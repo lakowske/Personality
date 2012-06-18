@@ -5,7 +5,7 @@ require_once('ControllerNode.php');
 function displayFunc($templateName, $templateSupplier) {
   return function ($request) use ($templateSupplier, $templateName) {
     $t = getTemplateFunc($templateName, $templateSupplier);
-    return $t($request)->display();
+    return $t($request)->fetch();
   };
 }
 
@@ -17,7 +17,7 @@ function previewFunc($templateName, $templateSupplier) {
     foreach ($postVars as $key => $value) {
       $t->add_variable($key, $value);
     }
-    return $t->display();
+    return $t->fetch();
   };
 }
   

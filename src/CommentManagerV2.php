@@ -1,19 +1,7 @@
 <?php
 require_once('Comment.php');
 
-function byType($commentManager, $type) {
-  return function () use ($commentManager, $type) {
-    return $commentManager->last_entries_of_type($type);
-  };
-}
-
-function byReference($commentManager, $cid) {
-  return function () use ($commentManager, $cid) {
-    return $commentManager->last_entries_referencing($cid);
-  };
-}
-
-class CommentManager
+class CommentManagerV2
 {
   private $databaseSupplier;
 
@@ -23,7 +11,6 @@ class CommentManager
 
   function load_entry($cid) {
     $d = $this->databaseSupplier->get();
-    $r = $d->query("BEGIN");
     
     $r = $d->query("select * from comment where cid = '$cid'");
     if(num_rows($r) <= 0) {
@@ -41,22 +28,57 @@ class CommentManager
     $comment->type     = $row[5];
     $comment->tstamp   = $row[6];
 
-    /*
-    $r = $d->query("select count(*) from comment where rcid = '$comment->cid'");
-    
-    if(num_rows($r) <= 0) {
-      $comment->children = 0;
-    } else {
-      $row = pg_fetch_row($r);      
-      $comment->children = $row[0];
+    $r = $d->query("select cid from commentref where rcid = '$cid'");
+
+    if (num_rows($r) == 0) {
+      return $comment;
     }
 
-    $r = $d->query("COMMIT");    
-    */    
+    if(num_rows($r) < 0) {
+      error_log("Got an error requesting $cid s children");
+      return NULL;
+    }
+    
+    $cids = array();
+    foreach($d->fetch_all() as $result) {
+      array_push($cids, $result['cid']);
+    }
+    $comment->children = $cids;
+
     return $comment;
   }
+
+  /**
+   * Stores the comment in the database.  Does not concern itself with relations to the comment.
+   */
+  function copy_entry($comment) {
+    $d = $this->databaseSupplier->get();
+    
+    $d->query("BEGIN");
+    
+    $comment->marshal();
+    
+    $d->query("insert into comment (cid, uid, username, title, contents, "
+	      . "cdate, type) values('$comment->cid', '$comment->uid', "
+	      . "'$comment->username', "
+	      . "'$comment->title', '$comment->contents', current_timestamp, "
+	      . "'$comment->type')");
+
+    $d->query("COMMIT");
+  }
+
+  /**
+   * create a refrence to rcid from cid.
+   */
+  function reference_comment($cid, $rcid) {
+    $d = $this->databaseSupplier->get();
+    $d->query("BEGIN");
+    $d->query("insert into commentref (cid, rcid) values ('$cid', '$rcid')");
+    $d->query("COMMIT");
+  }
+
   
-  function store_entry($comment) {
+  function insert_entry($comment) {
     $d = $this->databaseSupplier->get();
     
     $d->query("BEGIN");
@@ -71,7 +93,7 @@ class CommentManager
     
     $d->query("COMMIT");
   }
-  
+
   function update_entry($comment) {
     $d = $this->databaseSupplier->get();
     $d->query("BEGIN");
@@ -98,24 +120,13 @@ class CommentManager
      $d->query("COMMIT");
   }
 
-  /*
-   * last_entries returns the comment ids of the most recent entries.
-   */
-  function last_entries() {
-    return filter_comments("select cid from comment order by cdate");
-  }
-
-  function filter_comments($sql) {
+  function filter_comments($sql) 
+  {
      $d = $this->databaseSupplier->get();
-     error_log($sql);
+
      $d->query($sql);
    
      $cids = array();
-     
-     if ($d->num_rows() < 1) {
-       return $cids;
-     }
-
      foreach($d->fetch_all() as $result) {
        array_push($cids, $result['cid']);
      }
@@ -123,16 +134,19 @@ class CommentManager
      return $cids;
   }
 
+  function all_entries() {
+    return filter_comments("select cid from comment");
+  }
+
   /*
-   * cid - comment id
-   * returns comments referencing cid
+   * last_entries returns the comment ids of the most recent entries.
    */
-  function last_entries_referencing($cid) {
-    return $this->filter_comments("select c.cid from commentref r, comment c where r.rcid = '$cid' and r.cid = c.cid order by c.cdate desc");
+  function last_entries() {
+    return filter_comments("select cid from comment order by cdate");
   }
 
   function last_entries_of_type($type) {
-    return $this->filter_comments("select cid from comment where type = '$type' order by cdate");
+    return filter_comments("select cid from comment where type = '$type' order by cdate");
   }    
 }
 

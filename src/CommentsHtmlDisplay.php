@@ -23,6 +23,7 @@ class CommentsHtmlDisplay extends CommentRetrieverNode
     $result = '';
     foreach ($cids as $cid) {
       $result .= $this->commentHtmlDisplay->run($cid, $base);
+      $result .= "<BR>";
     }
     return $result;
   }

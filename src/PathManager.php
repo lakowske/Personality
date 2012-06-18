@@ -19,7 +19,11 @@ class PathManager
    *
    */
   public function scriptBasePath() {
-    $scriptName = $this->server['SCRIPT_NAME'];
+    return $this->buildScriptBasePath($this->server);
+  }
+
+  public static function buildScriptBasePath($server) {
+    $scriptName = $server['SCRIPT_NAME'];
     return strstr($scriptName, '.php', TRUE);
   }
 

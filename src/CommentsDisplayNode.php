@@ -9,20 +9,22 @@ class CommentsDisplayNode extends Node
 {
   private $commentManager;
   private $commentsHtmlDisplay;
-  private $type;
+  private $filterFunction;
 
-  public function __construct($type, $commentManager, $commentsHtmlDisplay, $predicate) {
+  public function __construct($commentManager, $commentsHtmlDisplay, $filterFunction, $predicate) {
     parent::__construct($predicate, $this);
-    $this->type = $type;
     $this->commentManager = $commentManager;
     $this->commentsHtmlDisplay = $commentsHtmlDisplay;
+    $this->filterFunction = $filterFunction;
   }
 
   public function run($request) {
     $pathManager = new PathManager($request->getServerVars());
     $base = $pathManager->scriptBasePath();
+    
+    $f = $this->filterFunction;
+    $cids = $f();
 
-    $cids = $this->commentManager->last_entries_of_type($this->type);
     return $this->commentsHtmlDisplay->run($cids, $base);
   }
 

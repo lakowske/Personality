@@ -18,7 +18,7 @@ class FileTypeManager
 	return $type;
       }
     }
-    return $default;
+    return $this->default;
   }
 
 }
