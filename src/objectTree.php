@@ -6,6 +6,7 @@ require_once('FileUploadControllerNode.php');
 require_once('FileListControllerNode.php');
 require_once('DownloadControllerNode.php');
 require_once('AddGroupNode.php');
+require_once('CommentReferenceManager.php');
 require_once('CommentAddNode.php');
 require_once('CommentDisplayNode.php');
 require_once('CommentEditNode.php');
@@ -49,7 +50,8 @@ $isPostFinalSubmit = a($isPost, $isSubmit, $isFinal);
   
 $pathManager = PathManager::get();
 $userManager = new UserManager($databaseSupplier);
-$commentManager = new CommentManager($databaseSupplier);
+$commentRefManager = new CommentReferenceManager($databaseSupplier);
+$commentManager = new CommentManager($databaseSupplier, $commentRefManager);
 $fileManager = new FileManager($databaseSupplier);
 $fileTypeManager = new FileTypeManager();
 $groupManager = new GroupManager($databaseSupplier);
@@ -122,6 +124,9 @@ $codeDisplayNode = new CommentsDisplayNode($commentManager, $commentsHtmlDisplay
 $commentPreviewNode = new Node(a($commentAddRegPred->get(), $isPostSubmitPreview),
 			       previewFunc('addentry.tpl', $templateSupplier));
 
+$commentCreateNode = new Node(a($commentAddRegPred->get(), $isGet),
+			      displayFunc('addentry.tpl', $templateSupplier));
+
 $commentDeleteNode = new Node(a($commentDeleteRegPred->get(), $isGet),
 			      commentDelete($commentManager, $commentDeleteRegPred));
 
@@ -135,12 +140,9 @@ $commentDisplayNode = new CommentDisplayNode($commentHtmlDisplay, $commentDispla
 
 
 
-array_push(&$userDependentControllers, $fileUploadControllerNode, $fileListControllerNode, $addGroupNode, $commentAddNode,
-	   $commentDisplayNode, $commentDeleteNode, $commentEditNode, $commentUpdateNode, $commentsDisplayNode, $codeDisplayNode);
+array_push(&$userDependentControllers, $fileUploadControllerNode, $fileListControllerNode, $addGroupNode, $commentCreateNode, $commentAddNode, $commentDisplayNode, $commentDeleteNode, $commentEditNode, $commentUpdateNode, $commentsDisplayNode, $codeDisplayNode);
 
 $userSupplierNode->setControllerNodes(&$userDependentControllers);
-
-
 
 $controllerNodes = array($commentPreviewNode, $addEntryDisplayNode, $loginControllerNode, $loginDisplayNode, $signupControllerNode, $signupDisplayNode, $uploadDisplayNode, $userSupplierNode);
 

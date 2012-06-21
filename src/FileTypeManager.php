@@ -6,7 +6,9 @@
  */
 class FileTypeManager
 {
-  private $regMatches = array( "/\.jpg$/" => "image/jpeg");
+  private $regMatches = array( "/\.jpg$/" => "image/jpeg",
+			       "/\.png$/" => "image/png",
+			       "/\.pdf$/" => "application/pdf");
   private $default = "application/octet-stream";
 
   public function filetype($path) {

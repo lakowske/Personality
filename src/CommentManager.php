@@ -16,9 +16,11 @@ function byReference($commentManager, $cid) {
 class CommentManager
 {
   private $databaseSupplier;
+  private $commentRefManager;
 
-  public function __construct($databaseSupplier) {
+  public function __construct($databaseSupplier, $commentRefManager) {
     $this->databaseSupplier = $databaseSupplier;
+    $this->commentRefManager = $commentRefManager;
   }
 
   function load_entry($cid) {
@@ -90,12 +92,16 @@ class CommentManager
   }
   
   function delete_entry($cid) {
-     $d = $this->databaseSupplier->get();
-     $d->query("BEGIN");
+    //Delete the reference from this comment to any other.
+    $this->commentRefManager->removeCommentReferences($cid);
+
+    $d = $this->databaseSupplier->get();
+
+    $d->query("BEGIN");
      
-     $d->query("delete from comment where cid = '$cid'");
+    $d->query("delete from comment where cid = '$cid'");
      
-     $d->query("COMMIT");
+    $d->query("COMMIT");
   }
 
   /*

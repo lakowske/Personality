@@ -63,7 +63,6 @@ class SessionManager
     $newdata = pg_escape_string($data);
     error_log('writing: ' . $data);
     error_log('to session_id: ' . $newid);
-    error_log("newdata: $newdata");
     $existSql = "Select session_id FROM session WHERE session_id = '$newid'";
     $this->d->query($existSql);
     $sql = '';
@@ -72,7 +71,6 @@ class SessionManager
     } else {
       $sql = "INSERT INTO session VALUES('$newid', $time, '$sqlDateTimeNow', '$sqlDateTimeExpire', '$newdata')";
     }
-    error_log($sql);
     $this->d->query("BEGIN");
     $this->d->query($sql);
     $this->d->query("COMMIT");
