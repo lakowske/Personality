@@ -69,6 +69,7 @@ $templateSupplier = new TemplateSupplier(__DIR__, array($pathManager->templateDi
 $commentsDisplayPred         = new RegPred("/^\/comments$/");
 $codeDisplayPred             = new RegPred("/^\/code$/");
 $defaultDisplayPred          = new RegPred("/^\/$/");
+$defaultDisplayPred2          = new RegPred("/^$/");
 $commentEditRegPred          = new RegPred("/^\/edit\/comment\/(\d+)$/");
 $commentDeleteRegPred        = new RegPred("/^\/delete\/comment\/(\d+)$/");
 $commentDisplayRegPred       = new RegPred("/^\/view\/comment\/(\d+)$/");
@@ -117,7 +118,7 @@ $commentHtmlDisplay = new CommentHtmlDisplayNode($commentManager, $userSupplierN
 
 $commentsHtmlDisplay = new CommentsHtmlDisplay($commentHtmlDisplay);
 
-$commentsDisplayNode = new CommentsDisplayNode($commentManager, $commentsHtmlDisplay, byReference($commentManager, 1), a(o($commentsDisplayPred->get(), $defaultDisplayPred->get()), $isGet));
+$commentsDisplayNode = new CommentsDisplayNode($commentManager, $commentsHtmlDisplay, byReference($commentManager, 1), a(o($commentsDisplayPred->get(), o($defaultDisplayPred->get(), $defaultDisplayPred2->get())), $isGet));
 
 $codeDisplayNode = new CommentsDisplayNode($commentManager, $commentsHtmlDisplay, byType($commentManager, 'code'), a($codeDisplayPred->get(), $isGet));
 
