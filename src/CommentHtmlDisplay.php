@@ -19,10 +19,11 @@ class CommentHtmlDisplayNode extends CommentRetrieverNode
     $this->databaseSupplier = $databaseSupplier;
   }
 
-  public function run($cid, $base) {
+  public function run($cid) {
     $comment = $this->commentManager->load_entry($cid);
 
     $template = $this->templateSupplier->get('entry.tpl');
+    $base = $this->templateSupplier->getScriptBasePath();
     $user = $this->userSupplier->get();
 
     if ($user != null) {

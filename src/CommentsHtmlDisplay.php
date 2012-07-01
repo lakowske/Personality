@@ -19,10 +19,10 @@ class CommentsHtmlDisplay extends CommentRetrieverNode
    * $cids - array of comment ids
    * $base - base application path string
    */
-  public function run($cids, $base) {
+  public function run($cids) {
     $result = '';
     foreach ($cids as $cid) {
-      $result .= $this->commentHtmlDisplay->run($cid, $base);
+      $result .= $this->commentHtmlDisplay->run($cid);
       $result .= "<BR>";
     }
     return $result;

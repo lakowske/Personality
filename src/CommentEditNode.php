@@ -23,10 +23,9 @@ class CommentEditNode extends CommentRetrieverNode
 
   public function run($request) {
     $comment = parent::run($request);
-    $pathManager = new PathManager($request->getServerVars());
     $cid = $comment->cid;
     $template = $this->templateSupplier->get('addentry.tpl');
-    $base = $pathManager->scriptBasePath();
+    $base = $this->templateSupplier->getStaticBasePath();
 
     $template->add_variable('title', $comment->title);
     $template->add_variable('content', $comment->content);

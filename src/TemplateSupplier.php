@@ -24,5 +24,13 @@ class TemplateSupplier
     return $t;
   }
 
+  public function getScriptBasePath() {
+    return $this->scriptBasePath;
+  }
+
+  public function getStaticBasePath() {
+    return $this->staticBasePath;
+  }
+
 }
 ?>

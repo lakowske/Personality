@@ -2,15 +2,20 @@
 
 class PathManager
 {
-  private $server;
-  
-  public function __construct($server) {
-    $this->server = $server;
+  private $scriptBasePath;
+
+  public function __construct($scriptBasePath) {
+    $this->scriptBasePath = $scriptBasePath;
   }
 
   public static function get() {
     return new PathManager(NULL);
   }
+
+  public static function buildFromServer($server) {
+    return new self(PathManager::buildScriptBasePath($server));
+  }
+    
 
   /**
    * Returns the base path url to the script.
@@ -19,7 +24,7 @@ class PathManager
    *
    */
   public function scriptBasePath() {
-    return $this->buildScriptBasePath($this->server);
+    return $this->scriptBasePath;
   }
 
   public static function buildScriptBasePath($server) {

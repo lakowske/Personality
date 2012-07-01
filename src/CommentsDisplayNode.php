@@ -19,13 +19,10 @@ class CommentsDisplayNode extends Node
   }
 
   public function run($request) {
-    $pathManager = new PathManager($request->getServerVars());
-    $base = $pathManager->scriptBasePath();
-    
     $f = $this->filterFunction;
     $cids = $f();
 
-    return $this->commentsHtmlDisplay->run($cids, $base);
+    return $this->commentsHtmlDisplay->run($cids);
   }
 
 }

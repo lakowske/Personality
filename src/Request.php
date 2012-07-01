@@ -15,19 +15,24 @@ class Request
   private $serverVars;
   private $pathManager;
 
-  public function __construct(&$postVars, &$sessionVars, &$serverVars, $requestMethod) {
+  public function __construct(&$postVars, &$sessionVars, &$serverVars, $requestMethod, $pathManager) {
     $this->postVars = &$postVars;
     $this->sessionVars = &$sessionVars;
     $this->requestMethod = $requestMethod;
     $this->serverVars = &$serverVars;
-    $this->pathManager = new PathManager(&$serverVars);
+    $this->pathManager = $pathManager;
   }
 
   public static function fromEnvironmentVariables() {
-    $instance = new self(&$_POST, &$_SESSION, &$_SERVER, $_SERVER['REQUEST_METHOD']);
-    return $instance;
+    $pathManager = PathManager::buildFromServer(&$_SERVER);
+    return Request::fromEnvironmentVariablesAndPathManager($pathManager);
   }
 
+  public static function fromEnvironmentVariablesAndPathManager($pathManager) {
+    $instance = new self(&$_POST, &$_SESSION, &$_SERVER, $_SERVER['REQUEST_METHOD'], $pathManager);
+    return $instance;
+  }
+    
   public function isPost() {
     return $this->requestMethod == 'POST';
   }
