@@ -57,10 +57,12 @@ $fileTypeManager = new FileTypeManager();
 $groupManager = new GroupManager($databaseSupplier);
 $uploadManager = new UploadManager('upload/');
 
-$scriptBasePath = PathManager::buildScriptBasePath(__FILE__);  
+if ($scriptBasePath == NULL) {
+  $scriptBasePath = PathManager::buildScriptBasePath(__FILE__);  
 
-if ($_SERVER != NULL) {
-  $scriptBasePath = PathManager::buildScriptBasePath($_SERVER);
+  if ($_SERVER != NULL) {
+    $scriptBasePath = PathManager::buildScriptBasePath($_SERVER);
+  }
 }
 
 $templateSupplier = new TemplateSupplier(__DIR__, array($pathManager->templateDir()), $staticURLSupplier->get(), $scriptBasePath);

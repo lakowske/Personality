@@ -43,7 +43,7 @@ class DownloadControllerNode extends Node
       ob_clean();
       flush();
       readfile($filepath);
-
+      exit(0);
       return TRUE;
     }
 
